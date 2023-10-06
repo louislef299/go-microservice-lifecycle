@@ -25,9 +25,10 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
+	// Run 5 parallel processes to read incoming IColors
 	resps := parallel(ctx, 5, gen(generateRandomValues(100)...))
 
-	// Set up the pipeline and consume the output.
+	// Set up the pipeline and consume the output
 	for resp := range resps {
 		if resp.err != nil {
 			log.Println("got an error:", resp.err)
@@ -83,7 +84,7 @@ func merge(ctx context.Context, cs ...<-chan *Response) <-chan *Response {
 	out := make(chan *Response)
 
 	// Start an output goroutine for each input channel in cs.  output
-	// copies values from c to out until c is closed, then calls wg.Done.
+	// copies values from c to out until c is closed, then calls wg.Done
 	output := func(c <-chan *Response) {
 		defer wg.Done()
 		for err := range c {
@@ -101,7 +102,7 @@ func merge(ctx context.Context, cs ...<-chan *Response) <-chan *Response {
 	}
 
 	// Start a goroutine to close out once all the output goroutines are
-	// done.  This must start after the wg.Add call.
+	// done.  This must start after the wg.Add call
 	go func() {
 		wg.Wait()
 		close(out)
