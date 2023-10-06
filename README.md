@@ -1,4 +1,4 @@
-# Pipeline Example
+# Go Microservice Lifecycle
 
 Go is great at concurrency on multi-core machines and networking. I had run
 across the [Go Pipelines and Cancellation][] blog post and decided to implement
