@@ -2,9 +2,12 @@
 
 Go is great at concurrency on multi-core machines and networking. I had run
 across the [Go Pipelines and Cancellation][] blog post and decided to implement
-it myself through the lens of building a microservice.
+it myself through the lens of building a microservice and the benefits channels
+provide for quickly designing a microservice. Optional: get a [refresher on
+microservices][].
 
-From the blog post, *Sameer Ajmani* describes the idea of what a Go pipeline is:
+From the Go blog post, *Sameer Ajmani* describes the idea of what a Go pipeline
+is:
 
 > There’s no formal definition of a pipeline in Go; it’s just one of many kinds
 > of concurrent programs. Informally, a pipeline is a series of stages connected
@@ -25,20 +28,15 @@ application that runs on a single machine, to running this as a microservice.
 Adding features or additional downstream/upstream functions becomes much more
 intuitive and decouples the functions further.
 
-## The IColor Project
+## The Color Product
 
-IColor is a simple example of how to split jobs between upstream and downstream
-jobs. The premise is simple: IColor is an interface that implements `Run()`.
-Upstream services generate IColor types and send them to downstream services
-that execute `Run()`. The `Response` value is then sent to the executing
-function.
+You and your team have been given the objective to migrate the existing Color
+service from a monolith into a microservice architecture. The Color service is
+very simple and takes incoming text and colors it according to the request.
 
-![IColor Flow Chart](./docs/.img/IColor-pipeline-light.png#gh-light-mode-only)
-![IColor Flow Chart](./docs/.img/IColor-pipeline-dark.png#gh-dark-mode-only)
-
-The project is split into [5 versions][] that simulate a traditional program
-progression. Each version has a separate doc that explains the iteration
-further.
+The product is split into [5 versions][] that simulate a program progression and
+changing business requirements. Each version has a separate doc that explains
+the iteration further.
 
 ## Makefile Targets
 
@@ -46,10 +44,11 @@ The `Makefile` has targets to run each version. Requirements include [docker][]
 and [Go][]. Example:
 
 ```bash
-make v1 # Runs v1 of the project
+make v1
 ```
 
 [5 versions]: https://www.cortex.io/content/the-5-stages-of-the-microservice-life-cycle-and-the-best-tools-to-optimize-them
 [docker]: https://www.docker.com/
 [Go]: https://go.dev/
 [Go Pipelines and Cancellation]: https://go.dev/blog/pipelines
+[refresher on microservices]: https://martinfowler.com/articles/microservices.html
