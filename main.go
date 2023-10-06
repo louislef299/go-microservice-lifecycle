@@ -12,7 +12,12 @@ import (
 )
 
 type IColor interface {
-	Run(ctx context.Context) error
+	Run(ctx context.Context) *Response
+}
+
+type Response struct {
+	err  error
+	resp string
 }
 
 func main() {
@@ -20,33 +25,37 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
-	errs := parallel(ctx, 5, gen(generateRandom(100)...))
+	resps := parallel(ctx, 5, gen(generateRandomValues(100)...))
 
 	// Set up the pipeline and consume the output.
-	for err := range errs {
-		if err != nil {
-			fmt.Println("got an error:", err)
+	for resp := range resps {
+		if resp.err != nil {
+			log.Println("got an error:", resp.err)
+		} else {
+			log.Println(resp.resp)
 		}
 	}
 }
 
-func printColor(ctx context.Context, in <-chan IColor, num int) <-chan error {
-	errs := make(chan error)
+// Does the work of printing responses found from the input channel
+func printColor(ctx context.Context, in <-chan IColor, num int) <-chan *Response {
+	resps := make(chan *Response)
 	fmt.Printf("thread %d reporting for duty!\n", num+1)
 	go func() {
-		defer close(errs)
+		defer close(resps)
 		for c := range in {
 			select {
-			case errs <- c.Run(ctx):
+			case resps <- c.Run(ctx):
 				time.Sleep(time.Millisecond * time.Duration(rand.Intn(1000)))
 			case <-ctx.Done():
 				return
 			}
 		}
 	}()
-	return errs
+	return resps
 }
 
+// Begins sending the IColors on the channel
 func gen(colors ...IColor) <-chan IColor {
 	out := make(chan IColor)
 	go func() {
@@ -58,8 +67,9 @@ func gen(colors ...IColor) <-chan IColor {
 	return out
 }
 
-func parallel(ctx context.Context, num int, in <-chan IColor) <-chan error {
-	var ch []<-chan error
+// Runs num parallel printers and returns a single channel that returns the responses
+func parallel(ctx context.Context, num int, in <-chan IColor) <-chan *Response {
+	var ch []<-chan *Response
 	fmt.Printf("running %d parallel readers\n", num)
 	for n := 0; n < num; n++ {
 		ch = append(ch, printColor(ctx, in, n))
@@ -67,13 +77,14 @@ func parallel(ctx context.Context, num int, in <-chan IColor) <-chan error {
 	return merge(ctx, ch...)
 }
 
-func merge(ctx context.Context, cs ...<-chan error) <-chan error {
+// Funnels all channels into one
+func merge(ctx context.Context, cs ...<-chan *Response) <-chan *Response {
 	var wg sync.WaitGroup
-	out := make(chan error)
+	out := make(chan *Response)
 
 	// Start an output goroutine for each input channel in cs.  output
 	// copies values from c to out until c is closed, then calls wg.Done.
-	output := func(c <-chan error) {
+	output := func(c <-chan *Response) {
 		defer wg.Done()
 		for err := range c {
 			select {
@@ -99,7 +110,7 @@ func merge(ctx context.Context, cs ...<-chan error) <-chan error {
 }
 
 // Generates num random IColors
-func generateRandom(num int) []IColor {
+func generateRandomValues(num int) []IColor {
 	var colors []IColor
 	for n := 0; n < num; n++ {
 		var c IColor
