@@ -39,5 +39,16 @@ The project is split into [5 versions][] that simulate a traditional program
 progression. Each version has a `README.md` file that explains the iteration
 further.
 
+## Makefile Targets
+
+The `Makefile` has targets to run each version. Requirements include [docker][]
+and [Go][]. Example:
+
+```bash
+make v1
+```
+
 [5 versions]: https://www.cortex.io/content/the-5-stages-of-the-microservice-life-cycle-and-the-best-tools-to-optimize-them
+[docker]: https://www.docker.com/
+[Go]: https://go.dev/
 [Go Pipelines and Cancellation]: https://go.dev/blog/pipelines
