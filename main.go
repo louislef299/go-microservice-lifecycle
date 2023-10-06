@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	v1 "github.com/louislef299/go-microservice-lifecycle/v1"
+	v1 "github.com/louislef299/go-microservice-lifecycle/pkg/v1"
 )
 
 var (
