@@ -37,7 +37,7 @@ function.
 ![IColor Flow Chart](./docs/IColor-pipeline-dark.png#gh-dark-mode-only)
 
 The project is split into [5 versions][] that simulate a traditional program
-progression. Each version has a `README.md` file that explains the iteration
+progression. Each version has a separate doc that explains the iteration
 further.
 
 ## Makefile Targets
