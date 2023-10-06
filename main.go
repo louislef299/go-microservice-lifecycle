@@ -1,7 +1,27 @@
 package main
 
-import v1 "example.com/pipelines/v1"
+import (
+	"flag"
+	"log"
+
+	v1 "example.com/pipelines/v1"
+)
+
+var (
+	version string
+)
 
 func main() {
-	v1.RunV1()
+	flag.Parse()
+
+	switch version {
+	case "v1":
+		v1.RunV1()
+	default:
+		log.Fatalf("%s is not a valid version option", version)
+	}
+}
+
+func init() {
+	flag.StringVar(&version, "v", "v1", "specify the version that the program should execute")
 }

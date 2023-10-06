@@ -28,8 +28,16 @@ microservice becomes much easier. Let me explain.
 ## The IColor Project
 
 IColor is a simple example of how to split jobs between upstream and downstream
-jobs. This is the current project:
+jobs. The premise is simple: IColor is an interface that implements `Run()`.
+Upstream services generate IColor types and send them to downstream services
+that execute `Run()`. The `Response` value is then sent to the executing
+function.
 
 ![IColor Flow Chart](./docs/IColor%20pipeline.png)
 
+The project is split into [5 versions][] that simulate a traditional program
+progression. Each version has a `README.md` file that explains the iteration
+further.
+
+[5 versions]: https://www.cortex.io/content/the-5-stages-of-the-microservice-life-cycle-and-the-best-tools-to-optimize-them
 [Go Pipelines and Cancellation]: https://go.dev/blog/pipelines
