@@ -33,7 +33,8 @@ Upstream services generate IColor types and send them to downstream services
 that execute `Run()`. The `Response` value is then sent to the executing
 function.
 
-![IColor Flow Chart](./docs/IColor%20pipeline.png)
+![IColor Flow Chart](./docs/IColor-pipeline-light.png#gh-light-mode-only)
+![IColor Flow Chart](./docs/IColor-pipeline-dark.png#gh-dark-mode-only)
 
 The project is split into [5 versions][] that simulate a traditional program
 progression. Each version has a `README.md` file that explains the iteration
