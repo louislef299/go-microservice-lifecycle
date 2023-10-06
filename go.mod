@@ -1,4 +1,4 @@
-module example.com/pipelines
+module github.com/louislef299/go-microservice-lifecycle
 
 go 1.21.1
 
